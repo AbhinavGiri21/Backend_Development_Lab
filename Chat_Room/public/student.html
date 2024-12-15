@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        /* Basic styles for the chat window */
+        #chat {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+
+        #message {
+            width: 240px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Student Chat</h2>
+    <div id="chat"></div>
+    <input id="message" placeholder="Type your message...">
+    <button id="send">Send</button>
+
+    <script>
+        const socket = io();
+        const room = 'studentRoom'; // Example room for student
+        socket.emit('joinRoom', room);
+
+        const chatDiv = document.getElementById('chat');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send');
+
+        socket.on('chatMessage', (msg) => {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${msg.sender}: ${msg.message}`;
+            chatDiv.appendChild(messageElement);
+            chatDiv.scrollTop = chatDiv.scrollHeight; // Scroll to bottom
+        });
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message) {
+                socket.emit('chatMessage', { room, message, sender: 'Student' });
+                messageInput.value = '';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

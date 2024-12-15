@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="weather-container">
+        <p id="weather">Loading weather...</p>
+    </div>
+
+    <div class="registration-container">
+        <h2>Register</h2>
+        <form action="/register" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirmPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="profileImage">Profile Image:</label>
+                <input type="file" id="profileImage" name="profileImage" accept="image/*" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const apiKey = 'b7d0132a74e3434fb5293105242409'; // Replace with your WeatherAPI key
+            const city = 'Dehradun';
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`;
+
+            try {
+                let response = await fetch(url);
+                if (!response.ok) throw new Error('Weather data not available');
+                let data = await response.json();
+                let weatherInfo = `Current Weather in ${city}: ${data.current.temp_c}°C, ${data.current.condition.text}`;
+                document.getElementById('weather').textContent = weatherInfo;
+            } catch (error) {
+                document.getElementById('weather').textContent = 'Weather information not available';
+                console.error('Error fetching weather:', error);
+            }
+        }
+
+        fetchWeather();
+    </script>
+</body>
+
+</html>
